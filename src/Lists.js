@@ -1,34 +1,60 @@
-import React, {Component} from 'react'
-import Card from './Card'
-import List from './List'
+import * as React from 'react'
+import Container from './Container'
+import CustomDragLayer from './CustomDragLayer'
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-class Lists extends Component{
-    renderList(color){
-        var piece = null;
-        if(this.props.cardPosition === color){
-            piece = <Card />
+class Lists extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            snapToGridAfterDrop: false,
+            snapToGridWhileDragging: false,
         }
+    }
+
+    render() {
+        const { snapToGridAfterDrop, snapToGridWhileDragging } = this.state
+
         return (
-            <List color={color}>
-                {piece}
-            </List>
+            <div>
+                <Container snapToGrid={snapToGridAfterDrop} />
+                <CustomDragLayer snapToGrid={snapToGridWhileDragging} />
+                <p>
+                    <label htmlFor="snapToGridWhileDragging">
+                        <input
+                            id="snapToGridWhileDragging"
+                            type="checkbox"
+                            checked={snapToGridWhileDragging}
+                            onChange={this.handleSnapToGridWhileDraggingChange}
+                        />
+                        <small>Snap to grid while dragging</small>
+                    </label>
+                    <br />
+                    <label htmlFor="snapToGridAfterDrop">
+                        <input
+                            id="snapToGridAfterDrop"
+                            type="checkbox"
+                            checked={snapToGridAfterDrop}
+                            onChange={this.handleSnapToGridAfterDropChange}
+                        />
+                        <small>Snap to grid after drop</small>
+                    </label>
+                </p>
+            </div>
         )
     }
 
-    render(){
-        return(
-            <div style={{
-                width: '900px',
-                height: '900px',
-                display: 'flex'
-            }}>
-                {this.renderList('orange')}
-                {this.renderList('green')}
-                {this.renderList('blue')}
-            </div>
-        )
+    handleSnapToGridAfterDropChange = () => {
+        this.setState({
+            snapToGridAfterDrop: !this.state.snapToGridAfterDrop,
+        })
+    }
+
+    handleSnapToGridWhileDraggingChange = () => {
+        this.setState({
+            snapToGridWhileDragging: !this.state.snapToGridWhileDragging,
+        })
     }
 }
 
